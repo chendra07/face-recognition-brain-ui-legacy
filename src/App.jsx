@@ -31,13 +31,6 @@ class App extends Component {
     };
   }
 
-  // componentDidMount() {
-  //   fetch(process.env.REACT_APP_LOCAL_BASE_URL)
-  //     .then((resp) => resp.json())
-  //     .then((data) => console.log(data))
-  //     .catch((error) => console.log("error: ", error));
-  // }
-
   calculateFaceBoxLocation = (data) => {
     console.log("clarifai: ", data);
     const clarifaiFace = data;
@@ -149,13 +142,6 @@ class App extends Component {
         joined: user.joined,
       },
     });
-    // fetch(process.env.REACT_APP_LOCAL_BASE_URL + `/profile/${userId}`)
-    //   .then((resp) => resp.json())
-    //   .then((data) => {
-    //   })
-    //   .catch((error) => {
-    //     message.error("Failed to get user data");
-    //   });
   };
 
   render() {
