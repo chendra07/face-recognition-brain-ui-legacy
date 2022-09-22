@@ -34,7 +34,6 @@ class App extends Component {
   }
 
   calculateFaceBoxLocation = (data) => {
-    console.log("clarifai: ", data);
     const clarifaiFace = data;
     const image = document.getElementById("inputimage");
     const width = Number(image.width);
@@ -70,42 +69,23 @@ class App extends Component {
   };
 
   onSubmit = () => {
-    const MODEL_ID = "face-detection";
     const IMAGE_URL = this.state.input;
-
-    const raw = JSON.stringify({
-      user_app_id: {
-        user_id: process.env.REACT_APP_USER_ID,
-        app_id: process.env.REACT_APP_APPLICATION_ID,
-      },
-      inputs: [
-        {
-          data: {
-            image: {
-              url: IMAGE_URL,
-            },
-          },
-        },
-      ],
-    });
-
     this.setState({
       imageUrl: IMAGE_URL,
     });
 
     if (IMAGE_URL.length > 0) {
-      fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          Authorization: "Key " + process.env.REACT_APP_CLARIFAI_KEY,
-        },
-        body: raw,
+      fetch(process.env.REACT_APP_BASE_URL + "/imageUrl", {
+        method: "post",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          imageUrl: IMAGE_URL,
+        }),
       })
-        .then((response) => response.json())
+        .then((imagePosition) => imagePosition.json())
         .then((res) => {
           if (res) {
-            fetch(process.env.REACT_APP_LOCAL_BASE_URL + "/image", {
+            fetch(process.env.REACT_APP_BASE_URL + "/image", {
               method: "put",
               headers: { "content-type": "application/json" },
               body: JSON.stringify({
@@ -119,11 +99,12 @@ class App extends Component {
                 )
               );
           }
+          console.log("ressss: ", res);
           this.displayFaceBox(
             this.calculateFaceBoxLocation(this.clarifaiIndexingData(res))
           );
         })
-        .catch((error) => message.error("invalid link"));
+        .catch((error) => message.error("unable to work with API"));
     } else {
       message.error("Link not found!");
     }

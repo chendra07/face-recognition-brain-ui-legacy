@@ -24,7 +24,7 @@ class Register extends React.Component {
   };
 
   onSubmitRegister = () => {
-    fetch(process.env.REACT_APP_LOCAL_BASE_URL + "/register", {
+    fetch(process.env.REACT_APP_BASE_URL + "/register", {
       method: "post",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -40,7 +40,7 @@ class Register extends React.Component {
           this.props.onRouteChange("home");
           message.success("Register Success!");
         } else {
-          message.error("Server Error, Please try again later");
+          message.error("Cannot register, Please try again later");
         }
       })
       .catch((error) => {
