@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { message } from "antd";
 // import Clarifai from "clarifai";
 import "./App.css";
 
@@ -97,36 +98,40 @@ class App extends Component {
       imageUrl: IMAGE_URL,
     });
 
-    fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        Authorization: "Key " + process.env.REACT_APP_CLARIFAI_KEY,
-      },
-      body: raw,
-    })
-      .then((response) => response.json())
-      .then((res) => {
-        if (res) {
-          fetch(process.env.REACT_APP_LOCAL_BASE_URL + "/image", {
-            method: "put",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({
-              id: this.state.user.id,
-            }),
-          })
-            .then((resp) => resp.json())
-            .then((data) =>
-              this.setState(
-                Object.assign(this.state.user, { entries: data.entries })
-              )
-            );
-        }
-        this.displayFaceBox(
-          this.calculateFaceBoxLocation(this.clarifaiIndexingData(res))
-        );
+    if (IMAGE_URL.length > 0) {
+      fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: "Key " + process.env.REACT_APP_CLARIFAI_KEY,
+        },
+        body: raw,
       })
-      .catch((error) => console.log("error", error));
+        .then((response) => response.json())
+        .then((res) => {
+          if (res) {
+            fetch(process.env.REACT_APP_LOCAL_BASE_URL + "/image", {
+              method: "put",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({
+                id: this.state.user.id,
+              }),
+            })
+              .then((resp) => resp.json())
+              .then((data) =>
+                this.setState(
+                  Object.assign(this.state.user, { entries: data.entries })
+                )
+              );
+          }
+          this.displayFaceBox(
+            this.calculateFaceBoxLocation(this.clarifaiIndexingData(res))
+          );
+        })
+        .catch((error) => message.error("invalid link"));
+    } else {
+      message.error("Link not found!");
+    }
   };
 
   onRouteChange = (route) => {
