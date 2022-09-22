@@ -13,22 +13,24 @@ import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import SignIn from "./components/SignIn/SignIn";
 import Register from "./components/Register/Register";
 
+const initialState = {
+  input: "",
+  imageUrl: "",
+  imageBoxRegion: [],
+  route: "signin",
+  user: {
+    id: "",
+    name: "",
+    email: "",
+    entries: 0,
+    joined: "",
+  },
+};
+
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      input: "",
-      imageUrl: "",
-      imageBoxRegion: [],
-      route: "signin",
-      user: {
-        id: "",
-        name: "",
-        email: "",
-        entries: 0,
-        joined: "",
-      },
-    };
+    this.state = initialState;
   }
 
   calculateFaceBoxLocation = (data) => {
@@ -128,7 +130,11 @@ class App extends Component {
   };
 
   onRouteChange = (route) => {
-    this.setState({ route: route });
+    if (route === "signin") {
+      this.setState(initialState);
+    } else {
+      this.setState({ route: route });
+    }
   };
 
   loadUser = (user) => {
