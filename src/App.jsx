@@ -104,7 +104,10 @@ class App extends Component {
             this.calculateFaceBoxLocation(this.clarifaiIndexingData(res))
           );
         })
-        .catch((error) => message.error("unable to work with API"));
+        .catch((error) => {
+          console.error("Error: ", error);
+          message.error("unable to work with API");
+        });
     } else {
       message.error("Link not found!");
     }
