@@ -135,6 +135,7 @@ class App extends Component {
   };
 
   render() {
+    console.log("env: ", process.env.REACT_APP_BASE_URL);
     return (
       <div className="App">
         <ParticleBackground />
